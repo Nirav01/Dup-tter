@@ -21,7 +21,7 @@
 //Max num of users
 #define MAX_USERS 100
 
-typedef struct tweet
+typedef struct tweet 
 {
     int id;
     char msg[TWEET_LENGTH];
