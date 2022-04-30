@@ -17,14 +17,14 @@ void create_twitter_system(twitter * ts)
             fgets(newptr->username, USR_LENGHT, stdin);
             fflush(stdin);
             if (newptr->username[0] == ' ') 
-            {
+            { 
                 printf("(Do not start username with a 'Space'!!!)");
                 i--;
                 continue;
             }
             if (newptr->username[0] == '\t') 
             {
-                break;
+                break; 
             }
             if (newptr->username[strlen(newptr->username) - 1] == '\n') 
             {
