@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-void create_twitter_system(twitter * ts) 
+void create_twitter_system(twitter * ts)   
 {
     Userptr currptr;
     ts->headptr = NULL;
