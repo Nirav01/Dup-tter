@@ -49,3 +49,21 @@ void follow(twitter *ts, user *ptr)
         return;
     }
 }
+
+void delete_user(twitter *ts, user *curruser)
+{
+    Userptr tmp;
+    tmp = ts->headptr;
+    if(curruser == ts->headptr)
+    {
+        ts->headptr = curruser->nextptr;
+        free(curruser);
+        return;
+    }
+    while(strcasecmp(tmp->nextptr->username, curruser->username) != 0){
+        tmp = tmp->nextptr;
+    }
+    tmp->nextptr = curruser->nextptr;
+    sub_delete(ts, curruser);
+    free(curruser);
+}
