@@ -10,12 +10,12 @@
 #include <stdio.h>
 
 
-void follow(twitter *ts, user *ptr); 
+void follow(twitter *twitterSystem, user *ptr);
 
-void unfollow(twitter *ts, user *ptr); 
+void unfollow(twitter *twitterSystem, user *ptr);
 
-void delete_user(twitter *ts, user *curruser); 
+void deleteUser(twitter *twitterSystem, user *currentUser);
 
-void sub_delete(twitter *ts, user *curruser);
+void subDelete(twitter *twitterSystem, user *currentUser);
 
 #endif //ENGPROJECT2_FUNCTIONS_H

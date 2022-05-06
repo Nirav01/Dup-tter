@@ -1,78 +1,81 @@
+//files required import
 #include "twitter_create.h"
 #include "Menu.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
-void create_twitter_system(twitter * ts)   
+void createTwitterSystem(twitter * twitterSystem)//function for twitter system
 {
-    Userptr currptr;
-    ts->headptr = NULL;
-    ts->tweetheadptr = NULL;
-    for (int i = 0; i < MAX_USERS; i++) 
+    userPtr currentPtr;//current user pointer
+    twitterSystem->headPtr = NULL;
+    twitterSystem->tweetHeadPtr = NULL;
+    for (int i = 0; i < MAX_USERS; i++)
     {
-        Userptr newptr = malloc(sizeof(user));
-        if (newptr != NULL) {
+        userPtr newPtr = malloc(sizeof(user));//assigning dynamic memory to assign users
+        if (newPtr != NULL)
+        {//taking input of usernames.
             printf("\nEnter username of the next user or press 'tab key' then 'Enter' to exit:\n");
-            fgets(newptr->username, USR_LENGHT, stdin);
+            fgets(newPtr->username, USR_LENGTH, stdin);
             fflush(stdin);
-            if (newptr->username[0] == ' ') 
-            { 
+            if (newPtr->username[0] == ' ')//error check wrong input
+            {
                 printf("(Do not start username with a 'Space'!!!)");
                 i--;
                 continue;
             }
-            if (newptr->username[0] == '\t') 
+            if (newPtr->username[0] == '\t')
             {
-                break; 
-            }
-            if (newptr->username[strlen(newptr->username) - 1] == '\n') 
+                break;
+            }//defining members of struct user
+            if (newPtr->username[strlen(newPtr->username) - 1] == '\n')
             {
-                newptr->username[strlen(newptr->username) - 1] = '\0';
+                newPtr->username[strlen(newPtr->username) - 1] = '\0';
             }
-            newptr->num_followers = 0;
-            newptr->num_following = 0;
-            newptr->nextptr = NULL;
+            newPtr->numFollowers = 0;
+            newPtr->numFollowing = 0;
+            newPtr->nextPtr = NULL;
         }
-        if (ts->headptr == NULL) 
+        if (twitterSystem->headPtr == NULL)//replacing header data with newPtr data
         {
-            ts->headptr = newptr;
-        } 
-        else 
+            twitterSystem->headPtr = newPtr;
+        }
+        else
         {
-            currptr = ts->headptr;
-            while (currptr->nextptr != NULL) 
+            currentPtr = twitterSystem->headPtr;
+            while (currentPtr->nextPtr != NULL)
             {
-                currptr = currptr->nextptr;
+                currentPtr = currentPtr->nextPtr;
             }
-            currptr->nextptr = newptr;
+            currentPtr->nextPtr = newPtr;//pointing to newPtr appending new data
         }
     }
-    currptr = ts->headptr;
-    while (currptr != NULL) 
-    {
-        printf("User: %s  \t\tfollowing: %d\tfollowers: %d\n", currptr->username, currptr->num_followers,
-               currptr->num_followers);
-        currptr = currptr->nextptr;
+    currentPtr = twitterSystem->headPtr;
+    while (currentPtr != NULL)
+    {//printing user info
+        printf("User: %s  \t\tfollowing: %d\tfollowers: %d\n", currentPtr->username, currentPtr->numFollowers,
+               currentPtr->numFollowers);
+        currentPtr = currentPtr->nextPtr;
     }
-    currptr = ts->headptr;
+    currentPtr = twitterSystem->headPtr;
     int control;
-    while (1) 
+    while (1)
     {
-        printf("\n\nCurrent User: %s\n", currptr->username);
-        control = menu(ts, currptr);
-        if (control == 6) {
-            if (currptr->nextptr == NULL) 
+        printf("\n\nCurrent User: %s\n", currentPtr->username);
+        control = menu(twitterSystem, currentPtr);
+        if (control == 6)//iterating to next user
+        {
+            if (currentPtr->nextPtr == NULL)
             {
-                currptr = ts->headptr;
-            } 
-            else 
+                currentPtr = twitterSystem->headPtr;
+            }
+            else
             {
-                currptr = currptr->nextptr;
+                currentPtr = currentPtr->nextPtr;
             }
             continue;
-        } 
-        else if (control == 7) 
+        }
+        else if (control == 7)//terminating twitter program
         {
             break;
         }

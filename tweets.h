@@ -8,6 +8,6 @@
 #endif //PROJECT2_TWEETS_H
 
 
-void posttweet(twitter *ts, user *ptr);
+void postTweet(twitter *twitterSystem, user *ptr);
 
-void getNewsFeed(twitter *ts, user *currUser);
+void getNewsFeed(twitter *twitterSystem, user *currentUser);

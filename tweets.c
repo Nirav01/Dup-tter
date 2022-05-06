@@ -1,4 +1,4 @@
- 
+//importing useful header files and library
 #include "tweets.h"
 #include "twitter_create.h"
 #include <stdio.h>
@@ -6,54 +6,59 @@
 #include <string.h>
 #include "Menu.h"
 
-void posttweet(twitter *ts, user* ptr)
+void postTweet(twitter *twitterSystem, user* ptr)//function to post tweets by current user
 {
-    Tweetptr currptr = malloc(sizeof(struct tweet));
+    tweetPtr currentPtr = malloc(sizeof(struct tweet));//allocating dynamic memory for new tweet
     printf("What's on your mind?\n");
-    fgets(currptr->msg, TWEET_LENGTH,stdin);
+    fgets(currentPtr->message, TWEET_LENGTH,stdin);//taking tweet(message) input
     fflush(stdin);
-    if(currptr->msg[strlen(currptr->msg) - 1] == '\n') {
-        currptr->msg[strlen(currptr->msg) - 1] = '\0';     }
-    strcpy(currptr->user,ptr->username);
-    if(ts->tweetheadptr == NULL){
-        ts->tweetheadptr=currptr;
-        currptr->nextpointer=NULL;
+    if(currentPtr->message[strlen(currentPtr->message) - 1] == '\n')
+    {
+        currentPtr->message[strlen(currentPtr->message) - 1] = '\0';     }//terminating message with '\0'
+    strcpy(currentPtr->user,ptr->username);
+    //connecting nodes of struct
+    if(twitterSystem->tweetHeadPtr == NULL)
+    {
+        twitterSystem->tweetHeadPtr=currentPtr;
+        currentPtr->nextPointer=NULL;
     }
     else
     {
-        currptr->nextpointer=ts->tweetheadptr;
-        ts->tweetheadptr= currptr;
+        currentPtr->nextPointer=twitterSystem->tweetHeadPtr;
+        twitterSystem->tweetHeadPtr= currentPtr;
     }
 }
-void getNewsFeed(twitter *ts, user *currUser)
+void getNewsFeed(twitter *twitterSystem, user *currentUser)//function to print tweets by current user and users followed
 {
-    tweetPtr currptr; //temp ptr
+    tweetPtr currentPtr; //temp ptr
     int count = 0;
-    currptr = ts->tweetHeadPtr;
-    while(currptr != NULL)
+    currentPtr = twitterSystem->tweetHeadPtr;
+    while(currentPtr != NULL)
     {
-        if(currUser->num_following>0) {
-            for (int i = 0; i < currUser->num_following; i++) {
-                if (strcasecmp(currptr->user, currUser->following[i]) == 0 ||strcasecmp(currptr->user, currUser->username) == 0)
-                {
-                    count++;
-                    printf("%s\n", currptr->msg);
-                    //                printf("%d\n", currptr->id);
+        if(currentUser->numFollowing>0)//checking if user follow anyone
+        {
+            for (int i = 0; i < currentUser->numFollowing; i++)
+            {
+                if (strcasecmp(currentPtr->user, currentUser->following[i]) == 0 ||strcasecmp(currentPtr->user, currentUser->username) == 0)
+                {//printing tweets by users followed
+                    count++;//keeping count of number of tweets displayed
+                    printf("%s\n", currentPtr->message);
+                    printf("%d\n", currentPtr->id);
                 }
             }
         }
         else
         {
-            if(strcasecmp(currptr->user, currUser->username)==0)
+            if(strcasecmp(currentPtr->user, currentUser->username)==0)//printing user messages
             {
                 count++;
-                printf("%s\n", currptr->msg);
+                printf("%s\n", currentPtr->message);
             }
         }
-        if(count==10)
+        if(count==10)//for maximum 10 tweets to be displayed
         {
             break;
         }
-        currptr = currptr->nextPtr;
+        currentPtr = currentPtr->nextPointer;
     }
 }

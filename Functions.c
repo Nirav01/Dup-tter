@@ -72,108 +72,125 @@ void deleteUser(twitter *nextPointer, user *currentUser)//function to delete use
     subDelete(nextPointer, currentUser);
     free(currentUser);
 }
-void sub_delete(twitter *ts, user *curruser)
+
+void subDelete(twitter *nextPointer, user *currentUser)//helper function to delete all the actions done by the user
 {
-    char tmpuser[USR_LENGTH];
-    for(int i = 0; i < curruser->num_followers; i++){
-        strcpy(tmpuser,curruser->followers[i]);
-        userPtr tmpptr = ts->headPtr;
-        while(strcasecmp(tmpptr->username,tmpuser)!=0)
+    char tempUser[USR_LENGTH];
+    for(int i = 0; i < currentUser->numFollowers; i++)//deleting num followers
+    {
+        strcpy(tempUser,currentUser->followers[i]);
+        userPtr tempPtr = nextPointer->headPtr;
+        while(strcasecmp(tempPtr->username,tempUser)!=0)
         {
-            tmpptr = tmpptr->nextptr;
+            tempPtr = tempPtr->nextPtr;
         }
         int k = 0;
-        while(strcasecmp(tmpptr->following[k],curruser->username)!=0){
+        while(strcasecmp(tempPtr->following[k],currentUser->username)!=0)
+        {
             k++;
         }
-        for(int o = k+1; o < tmpptr->num_following; o++){
-            strcpy(tmpptr->following[k],tmpptr->following[o]);
+        for(int o = k+1; o < tempPtr->numFollowing; o++)
+        {
+            strcpy(tempPtr->following[k],tempPtr->following[o]);
             k++;
         }
-        tmpptr->num_following--;
+        tempPtr->numFollowing--;//decreasing numFollowing
     }
-    for(int i = 0; i < curruser->num_following; i++){
-        strcpy(tmpuser,curruser->following[i]);
-        userPtr tmpptr = ts->headPtr;
-        while(strcasecmp(tmpptr->username,tmpuser)!=0){
-            tmpptr = tmpptr->nextptr;
+    for(int i = 0; i < currentUser->numFollowing; i++)//deleting trace of user from other users data
+    {
+        strcpy(tempUser,currentUser->following[i]);
+        userPtr tempPtr = nextPointer->headPtr;
+        while(strcasecmp(tempPtr->username,tempUser)!=0)
+        {
+            tempPtr = tempPtr->nextPtr;
         }
         int k = 0;
-        while(strcasecmp(tmpptr->followers[k],curruser->username)!=0){
+        while(strcasecmp(tempPtr->followers[k],currentUser->username)!=0)
+        {
             k++;
         }
-        for(int o = k+1; o < tmpptr->num_followers; o++){
-            strcpy(tmpptr->followers[k],tmpptr->followers[o]);
+        for(int o = k+1; o < tempPtr->numFollowers; o++)
+        {
+            strcpy(tempPtr->followers[k],tempPtr->followers[o]);
             k++;
         }
-        tmpptr->num_followers--;
+        tempPtr->numFollowers--;//decreasing number of followers
     }
 
-    if(ts->tweetHeadPtr == NULL){
+    if(nextPointer->tweetHeadPtr == NULL)
+    {
         return;
     }
-    tweetPtr currtweet = ts->tweetHeadPtr;
-    tweetPtr prevtweet = ts->tweetHeadPtr->nextPtr;
-    while(currtweet != NULL){
-        if(strcasecmp(curruser->username,currtweet->user) == 0){
-            if(currtweet == ts->tweetHeadPtr){
-                ts->tweetHeadPtr = currtweet->nextPtr;
-                free(currtweet);
-                currtweet = ts->tweetHeadPtr->nextPtr;
+    tweetPtr currentTweet = nextPointer->tweetHeadPtr;
+    tweetPtr previousTweet = nextPointer->tweetHeadPtr->nextPointer;
+    while(currentTweet != NULL)
+    {
+        if(strcasecmp(currentUser->username,currentTweet->user) == 0)
+        {
+            if(currentTweet == nextPointer->tweetHeadPtr)
+            {
+                nextPointer->tweetHeadPtr = currentTweet->nextPointer;
+                free(currentTweet);
+                currentTweet = nextPointer->tweetHeadPtr->nextPointer;
                 continue;
             }
-            prevtweet->nextPtr = currtweet->nextPtr;
-            free(currtweet);
-            currtweet = prevtweet->nextPtr;
+            previousTweet->nextPointer = currentTweet->nextPointer;
+            free(currentTweet);
+            currentTweet = previousTweet->nextPointer;
             continue;
         }
-        prevtweet = currtweet;
-        currtweet = currtweet->nextPtr;
+        previousTweet = currentTweet;
+        currentTweet = currentTweet->nextPointer;
     }
 }
-void unfollow(twitter *ts, user *ptr)
+void unfollow(twitter *nextPointer, user *ptr)//unfollow any user
 {
-    char name[USR_LENGHT];
-    char null[USR_LENGHT];
-    Userptr currptr;
-    currptr = ts->headptr;
-    for(int j = 0; j < USR_LENGHT; j++)
+    char name[USR_LENGTH];
+    char null[USR_LENGTH];
+    userPtr currentPtr;
+    currentPtr = nextPointer->headPtr;
+    for(int j = 0; j < USR_LENGTH; j++)
     {
         null[j] = '\0';
     }
     printf("\nEnter username of the user you would like to unfollow:\n");
     fflush(stdin);
-    fgets(name,USR_LENGHT,stdin);
-    if(name[strlen(name) - 1] == '\n') {
+    fgets(name,USR_LENGTH,stdin);//user current user wants to unfollow
+    if(name[strlen(name) - 1] == '\n')
+    {
         name[strlen(name) - 1] = '\0';
     }
     int i, check = 0;
-    for(i = 0; ptr->num_following; i++){
+    for(i = 0; ptr->numFollowing; i++)
+    {
         if(strcmp(ptr->following[i], name) == 0)
         {
             strcpy(ptr->following[i], null);
-            ptr->num_following--;
+            ptr->numFollowing--;//decreasing number of following by one
             check = 1;
             break;
         }
     }
-    if(check == 0)
+    if(check == 0)//checking if user exists
     {
         printf("Error, entered user not found.\n"
                "You do not follow this User.\n");
         return;
     }
-    while(currptr->nextptr != NULL)
+    while(currentPtr->nextPtr != NULL)
     {
-        if(strcasecmp(currptr->username, name) == 0){
+        if(strcasecmp(currentPtr->username, name) == 0)
+        {
             break;
         }
-        currptr = currptr->nextptr;
+        currentPtr = currentPtr->nextPtr;
     }
-    for(int k = 0; k < currptr->num_followers; k++){
-        if(strcmp(currptr->followers[i], ptr->username) == 0){
-            strcpy(currptr->followers[i], null);
-            currptr->num_followers--;
+    for(int k = 0; k < currentPtr->numFollowers; k++)
+    {
+        if(strcmp(currentPtr->followers[k], ptr->username) == 0)
+        {
+            strcpy(currentPtr->followers[k], null);
+            currentPtr->numFollowers--;//decreasing number of followers from user
             break;
         }
     }
