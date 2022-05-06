@@ -1,71 +1,76 @@
-
+//importing header files and library
 #include "twitter_create.h"
 #include "Functions.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-void follow(twitter *ts, user *ptr)
+void follow(twitter *nextPointer, user *ptr)//function to follow other users
 {
-    char mUser[USR_LENGHT];
+    char fUser[USR_LENGTH];
     printf("Enter user you want to Follow:\n");
     fflush(stdin);
-    fgets(mUser, USR_LENGHT, stdin);
-    if(mUser[strlen(mUser) -1] == '\n')
+    fgets(fUser, USR_LENGTH, stdin);//taking username of whom current user wants to follow
+    if(fUser[strlen(fUser) -1] == '\n')
     {
-        mUser[strlen(mUser) - 1] = '\0';
+        fUser[strlen(fUser) - 1] = '\0';
     }
-    for(int d = 0; d < MAX_FOLLOWING; d++){
-        if(strcasecmp(mUser,ptr->username)==0){
+    for(int d = 0; d < MAX_FOLLOWING; d++)
+    {
+        if(strcasecmp(fUser,ptr->username)==0)//checking if user entered his/her own username
+        {
             printf("You are not allowed to follow yourself!\n Try entering a different user.\n");
             return;
         }
-        if(strcasecmp(mUser,ptr->following[d])==0){
+        if(strcasecmp(fUser,ptr->following[d])==0)//checking if you already follow the user
+        {
             printf("You already follow this User!\n No point in following them twice!\n\n");
             return;
         }
     }
-    Userptr currptr;
-    currptr = ts->headptr;
-    int user_check = 0;
-    while(currptr != NULL)
+    userPtr currentPtr;
+    currentPtr = nextPointer->headPtr;
+    int userCheck = 0;
+    while(currentPtr != NULL)
     {
-        if(strcasecmp(currptr->username,mUser) == 0)
+        if(strcasecmp(currentPtr->username,fUser) == 0)//entering user to followers list
         {
-            strcpy(ptr->following[ptr->num_following], currptr->username );
-            ptr->num_following++;
-            strcpy(currptr->followers[currptr->num_followers], ptr->username);
-            currptr->num_followers++;
-            user_check = 1;
+            strcpy(ptr->following[ptr->numFollowing], currentPtr->username );
+            ptr->numFollowing++;//increasing num_following of current user
+            strcpy(currentPtr->followers[currentPtr->numFollowers], ptr->username);
+            currentPtr->numFollowers++;//increasing num_followers of the user followed
+            userCheck = 1;
             break;
         }
-        else{
-            currptr = currptr->nextptr;
+        else
+        {
+            currentPtr = currentPtr->nextPtr;
         }
     }
-    if(user_check == 0)
+    if(userCheck == 0)
     {
         puts("Username you have entered is not in the System! You will be returned to the menu Now!");
         return;
     }
 }
 
-void delete_user(twitter *ts, user *curruser)
+void deleteUser(twitter *nextPointer, user *currentUser)//function to delete user
 {
-    Userptr tmp;
-    tmp = ts->headptr;
-    if(curruser == ts->headptr)
+    userPtr temp;
+    temp = nextPointer->headPtr;
+    if(currentUser == nextPointer->headPtr)
     {
-        ts->headptr = curruser->nextptr;
-        free(curruser);
+        nextPointer->headPtr = currentUser->nextPtr;
+        free(currentUser);//removing data from memory
         return;
     }
-    while(strcasecmp(tmp->nextptr->username, curruser->username) != 0){
-        tmp = tmp->nextptr;
+    while(strcasecmp(temp->nextPtr->username, currentUser->username) != 0)
+    {
+        temp = temp->nextPtr;
     }
-    tmp->nextptr = curruser->nextptr;
-    sub_delete(ts, curruser);
-    free(curruser);
+    temp->nextPtr = currentUser->nextPtr;
+    subDelete(nextPointer, currentUser);
+    free(currentUser);
 }
 void sub_delete(twitter *ts, user *curruser)
 {

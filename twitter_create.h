@@ -1,5 +1,3 @@
-
-
 #ifndef PROJECT2_TWITTER_CREATE_H
 #define PROJECT2_TWITTER_CREATE_H
 
@@ -7,7 +5,7 @@
 #define TWEET_LENGTH 270
 
 //Max length of a username
-#define USR_LENGHT 100
+#define USR_LENGTH 100
 
 //Max num of a followers
 #define MAX_FOLLOWERS 30
@@ -15,44 +13,41 @@
 //Max num of following users
 #define MAX_FOLLOWING 30
 
-//Max num of tweets in the news feed
-#define MAX_TWEETS 100
-
 //Max num of users
 #define MAX_USERS 100
 
-typedef struct tweet 
+typedef struct tweet//defining struct for tweets data
 {
     int id;
-    char msg[TWEET_LENGTH];
-    char user[USR_LENGHT];
-    struct tweet *nextpointer; 
+    char message[TWEET_LENGTH];
+    char user[USR_LENGTH];
+    struct tweet *nextPointer;
 }tweet;
 
-typedef tweet *Tweetptr;
+typedef tweet *tweetPtr;
 
-typedef struct user
+typedef struct user//struct for user data
 {
-    char username[USR_LENGHT];
+    char username[USR_LENGTH];
 
-    char followers[MAX_FOLLOWERS][USR_LENGHT];
-    int num_followers;
+    char followers[MAX_FOLLOWERS][USR_LENGTH];
+    int numFollowers;
 
-    char following[MAX_FOLLOWING][USR_LENGHT];
-    int num_following;
+    char following[MAX_FOLLOWING][USR_LENGTH];
+    int numFollowing;
 
-    struct user *nextptr; 
+    struct user *nextPtr;
 }user;
 
-typedef user *Userptr; 
+typedef user *userPtr;
 
 
 typedef struct twitter
 {
-    Userptr headptr; 
-    Tweetptr tweetheadptr; 
+    userPtr headPtr;
+    tweetPtr tweetHeadPtr;
 } twitter;
 
-void create_twitter_system(twitter * ts); 
+void createTwitterSystem(twitter * twitterSystem);//function prototype
 
 #endif //PROJECT2_TWITTER_CREATE_H
